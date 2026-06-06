@@ -5,11 +5,12 @@ import PlaidLink from '../components/PlaidLink';
 
 
 interface Transaction{
-    transaction_id: string;
+    transactionId: string;
     name: string;
     amount: number;
     date: string;
     category: string[];
+    merchantName: string;
 }
 
 
@@ -25,7 +26,7 @@ const Dashboard = () => {
     };
 
     const fetchTransactions = async () => {
-        const response = await api.get('/api/plaid/transactions');
+        const response = await api.get('/api/transactions');
         setTransaction(response.data);
     };
 
@@ -69,15 +70,15 @@ return (
           </thead>
           <tbody>
             {transactions.map(tx => (
-              <tr key={tx.transaction_id} style={{ borderBottom: '1px solid #eee' }}>
+            <tr key={tx.transactionId} style={{ borderBottom: '1px solid #eee' }}>
                 <td style={{ padding: '8px' }}>{tx.name}</td>
-                <td style={{ padding: '8px' }}>{tx.category?.[0] || 'Uncategorized'}</td>
-                <td style={{ padding: '8px' }}>{tx.date}</td>
-                <td style={{ padding: '8px', textAlign: 'right', color: tx.amount > 0 ? 'red' : 'green' }}>
-                  ${Math.abs(tx.amount).toFixed(2)}
-                </td>
-              </tr>
-            ))}
+            <td style={{ padding: '8px' }}>{tx.category || 'Uncategorized'}</td>
+            <td style={{ padding: '8px' }}>{tx.date}</td>
+            <td style={{ padding: '8px', textAlign: 'right', color: tx.amount > 0 ? 'red' : 'green' }}>
+      ${Math.abs(tx.amount).toFixed(2)}
+    </td>
+  </tr>
+))}
           </tbody>
         </table>
       )}

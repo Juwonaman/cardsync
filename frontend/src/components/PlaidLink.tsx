@@ -11,12 +11,13 @@ interface Props {
 
 const PlaidLink = ({ linkToken, onSuccess }: Props) => {
     const onPlaidSuccess = useCallback(async (publicToken: string, metadata: any) => {
-        await api.post('/api/plaid/exchange-token', {
-            public_token: publicToken,
-            institution_name: metadata.institution.name 
-        });
-        onSuccess();
-    }, [onSuccess]);
+    await api.post('/api/plaid/exchange-token', {
+      public_token: publicToken,
+      institution_name: metadata.institution.name
+    });
+    await api.post('/api/transactions/sync');
+    onSuccess();
+  }, [onSuccess]);
 
     const { open, ready } = usePlaidLink({
         token: linkToken,
