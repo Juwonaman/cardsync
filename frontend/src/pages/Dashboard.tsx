@@ -16,9 +16,20 @@ interface Transaction {
   merchantName: string;
 }
 
+interface Summary {
+  totalSpent: number;
+  transactionCount: number;
+  spendingByCategory: Record<string, number>;
+  spendingByCard: Record<string, number>;
+  highestSpendingCategory: string;
+}
+
+
 const COLORS = ['#4F46E5', '#7C3AED', '#EC4899', '#F59E0B', '#10B981', '#3B82F6', '#EF4444'];
 
 const Dashboard = () => {
+    const [summary, setSummary] = useState<Summary | null>(null);
+
   const { user, logout } = useAuth();
   const [linkToken, setLinkToken] = useState<string | null>(null);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
@@ -32,10 +43,14 @@ const Dashboard = () => {
     const response = await api.get('/api/transactions');
     setTransactions(response.data);
   };
-
+    const fetchSummary = async () => {
+  const response = await api.get('/api/summary');
+  setSummary(response.data);
+    };
   useEffect(() => {
     fetchLinkToken();
     fetchTransactions();
+    fetchSummary();
   }, []);
 
   // Calculate category spending for pie chart
@@ -76,19 +91,19 @@ const Dashboard = () => {
 
       {/* Summary Cards */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem', marginBottom: '2rem' }}>
-        <div style={{ background: '#4F46E5', color: 'white', padding: '1.5rem', borderRadius: '8px' }}>
-          <div style={{ fontSize: '13px', opacity: 0.8 }}>Total Spent</div>
-          <div style={{ fontSize: '28px', fontWeight: 'bold' }}>${totalSpent.toFixed(2)}</div>
-        </div>
-        <div style={{ background: '#7C3AED', color: 'white', padding: '1.5rem', borderRadius: '8px' }}>
-          <div style={{ fontSize: '13px', opacity: 0.8 }}>Transactions</div>
-          <div style={{ fontSize: '28px', fontWeight: 'bold' }}>{transactions.length}</div>
-        </div>
-        <div style={{ background: '#10B981', color: 'white', padding: '1.5rem', borderRadius: '8px' }}>
-          <div style={{ fontSize: '13px', opacity: 0.8 }}>Categories</div>
-          <div style={{ fontSize: '28px', fontWeight: 'bold' }}>{categoryData.length}</div>
-        </div>
-      </div>
+  <div style={{ background: '#4F46E5', color: 'white', padding: '1.5rem', borderRadius: '8px' }}>
+    <div style={{ fontSize: '13px', opacity: 0.8 }}>Total Spent</div>
+    <div style={{ fontSize: '28px', fontWeight: 'bold' }}>${summary?.totalSpent.toFixed(2) ?? '0.00'}</div>
+  </div>
+  <div style={{ background: '#7C3AED', color: 'white', padding: '1.5rem', borderRadius: '8px' }}>
+    <div style={{ fontSize: '13px', opacity: 0.8 }}>Transactions</div>
+    <div style={{ fontSize: '28px', fontWeight: 'bold' }}>{summary?.transactionCount ?? 0}</div>
+  </div>
+  <div style={{ background: '#10B981', color: 'white', padding: '1.5rem', borderRadius: '8px' }}>
+    <div style={{ fontSize: '13px', opacity: 0.8 }}>Top Category</div>
+    <div style={{ fontSize: '20px', fontWeight: 'bold' }}>{summary?.highestSpendingCategory ?? 'None'}</div>
+  </div>
+</div>
 
       {/* Connect Button */}
       <div style={{ marginBottom: '2rem' }}>
