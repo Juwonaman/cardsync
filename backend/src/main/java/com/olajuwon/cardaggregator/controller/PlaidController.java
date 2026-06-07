@@ -6,7 +6,7 @@ import com.olajuwon.cardaggregator.repository.UserRepository;
 import com.olajuwon.cardaggregator.service.PlaidService;
 import com.olajuwon.cardaggregator.security.JwtUtil;
 import com.plaid.client.model.Transaction;
-import lombok.RequiredArgsConstructor;;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
@@ -62,6 +62,19 @@ public class PlaidController  {
             allTransactions.addAll(plaidService.getTransactions(item));
         }
         return ResponseEntity.ok(allTransactions);
+    }
+    @GetMapping("/accounts")
+    public ResponseEntity<List<Map<String, String>>> getAccounts(
+            @RequestHeader("Authorization") String authHeader) {
+        User user = getUserFromToken(authHeader);
+        List<PlaidItem> items = plaidService.getPlaidItems(user);
+        List<Map<String, String>> accounts = items.stream()
+                .map(item -> Map.of(
+                        "id", String.valueOf(item.getId()),
+                        "institutionName", item.getInstitutionName()
+                ))
+                .collect(java.util.stream.Collectors.toList());
+        return ResponseEntity.ok(accounts);
     }
 
 }
