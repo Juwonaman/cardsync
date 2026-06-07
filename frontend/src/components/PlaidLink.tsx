@@ -27,15 +27,18 @@ const PlaidLink = ({ linkToken, onSuccess }: Props) => {
     return (
         <button onClick={() => open()}
         disabled={!ready}
-        style = {{
-            padding: '10px 20px',
-            background: '#4F46E5',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: 'pointer',
-            fontSize: '14px',
-        }}>
+        style={{
+  fontSize: '13px',
+  padding: '8px 16px',
+  borderRadius: '7px',
+  border: '1px solid #0A0A0A',
+  background: '#0A0A0A',
+  color: '#FFFFFF',
+  cursor: 'pointer',
+  fontFamily: "'DM Sans', sans-serif",
+  fontWeight: 500,
+  opacity: ready ? 1 : 0.5,
+}}>
             Connect Bank Account
         </button>
     );
