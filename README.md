@@ -2,10 +2,6 @@
 
 A full-stack financial dashboard that aggregates credit card transactions across multiple accounts using the Plaid API. Users can securely link bank accounts, view spending by category, and get a complete summary of their finances in one place.
 
-## Demo
-[Loom Video Walkthrough](your-loom-link-here) <!-- add this on Day 10 -->
-
-![Dashboard Screenshot](your-screenshot-here) <!-- add this on Day 10 -->
 
 ## Tech Stack
 
